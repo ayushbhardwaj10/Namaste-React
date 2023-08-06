@@ -1,0 +1,32 @@
+1. Introduction to npm scripts : It's a industry standard practice that we follow to write commands in package.json under scripts which
+   we use often. 
+
+   => Example : Better way to start our app on dev mode : instead of writing npx parcel index.html everytime to create a dev build and 
+      deploy or app on local system, we can create a script and add it to package.json file.
+      Example adding this to package.json in scripts :
+      "scripts": {
+      "start": "parcel index.html",
+      "build": "parcel build index.html",
+      ..
+      }
+      Note: Here the keys 'start' and 'build' are name of the scripts and can be anything. 
+
+    => To run these scripts : npm run <script_name>
+        example : npm run start -> will run above script with command "parcel index.html" and parcel will create 
+        a dev build and deploy to local system.
+
+        Note : Only for "start" script name, we can "npm start" ommitting run but we cannot do this for other script names. Reason : 'start'
+        is reserved by npm, so we can directly run it.
+
+   => npm start : conventionally used to start app in development mode.
+
+   => npm run build : conventionally used to build the app in production mode.
+
+2. React Element : Just are we have DOM elements (HTML elements), we have React elements which are equivalent to DOM elements. 
+   
+   => Suppose we want to create a h1 element in DOM. 
+   => We create a react element equivalent to h1, we create this h1 equivalent ReactElement by : 
+      const heading = React.createElement("h1",{id:"heading"},"This is a h1 tag");
+   => React Element is not an HTML element, it's an object and when we render this React element to DOM, it becomes HTML.
+   
+3. 
