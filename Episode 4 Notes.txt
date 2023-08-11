@@ -1,0 +1,126 @@
+1. We'll make a food ordering app like zomato here. 
+2. Before coding, always plan what you are planning to do. If planning is done well, coding is very easy. 
+    We'll first decide the UI/UX of our app.
+3. Now decide the components you need for your app.
+   Components needed : 
+   (a) Header Component : logo, Nav Items
+   (b) Body Component : Search, RestaurantContainer - Restaurant card
+   (c) Footer : Copyright, Links, Address, Name and Contact
+4. Whenever you want to repeat a HTML element a lot of times, we can make a seperate component and render in multiple times.
+   - This makes your code modular.
+   - Always make your code reusable. When you create a seperate component, it makes you code reusable. 
+
+5. inline styling in JSX :  We use objects to give inline styling in JSX. 
+
+   const styleCard = {
+      backgroundColor:"red"     // Here we are writing the CSS also in JSX. Note the camecase and "backgroundColor" instead
+                               // of typical "background-color" used in CSS
+   }
+   <div className="res-card" style = {styleCard}>
+   .....
+   </div>
+
+   Note : Inline styling is not a preferred way to give styling.
+
+6. Props (Properties) :
+   => These are properties that we can pass to a functional component to change the functional component dynamically.
+   => These are normal arguments to a function. 
+   => We can pass props to a component using :   <RestaurantCard resName="Meghana Foods" cuisine="Biryani, North India, Asia" />
+
+   => We can use the props in components using : props are accesed as an object.
+
+      const RestaurantCard = (props) => {
+      console.log(props);
+      return (
+         <div
+            className="res-card">
+            <h3>{props.resName}</h3>
+            <h4>{props.cuisine}</h4>
+         </div>
+         );
+      }
+   => we can pass any number of props we want to.
+   => Another way to access props values in component is we can destructure the prop object. 
+      console.log({resName,cuising});
+      return (
+         <div
+            className="res-card">
+            <h3>{resName}</h3>
+            <h4>{cuising}</h4>
+         </div>
+         );
+      }
+   => Config driven UI : All the UI is driven by config (eg. config in JSON format). Most companies uses config driven UI these days. 
+   => Another way to pass the props to component : Used when we want to pass JSON we get from API to the component.
+       
+      (a) Define the json objects list(We'll get this from RestAPIs)  :
+            resList = [
+            {
+               resName: "Meghana Foods",
+               cuisine: "Biryani, North India, Asia",
+               avgRating: "4.2",
+               deliveryTime: "38",
+               imgURL: "https://b.zmtcdn.com/data/pictures/chains/1/50691/0435a03f4d2017a0a64d90b279c2fa63.jpg",
+            },
+            {
+               resName: "KFC",
+               cuisine: "Chicken,Junk Food,Burger",
+               avgRating: "4.5",
+               deliveryTime: "20",
+               imgURL: "https://s3-media0.fl.yelpcdn.com/bphoto/yd4NSzoBySgnf__6kRNzRg/o.jpg",
+            },
+            {
+               resName: "Dominoes Pizza",
+               cuisine: "Pizza, Junk Food,Burger",
+               avgRating: "5",
+               deliveryTime: "30",
+               imgURL: "https://s3-media0.fl.yelpcdn.com/bphoto/ks_iWjMCEnUZpXA6tMcoug/o.jpg",
+            },
+            ];
+      (b) Rendring the component like this : 
+          we'll use map() function to loop through each object and return the corresponding component rendering for it :
+            const Body = () => {
+            return (
+               <div className="body">
+                  <div className="Search ">Search</div>
+                  <div className="res-container ">
+                  {resList.map((restaurant) => (             // notice () round bracket here. We use this since, we want to return JSX. if we use {} like we use for normal function, it'll not return JSX.
+                     <RestaurantCard key={restaurant.id} resData={restaurant} />   // key is important, each component should be uniquely idenfied. (Why we need keys is discussed below)
+                  ))}
+                  </div>
+               </div>
+            );
+            };
+
+          TIP by Akshay Saini : Try using map, reduce, filter (Function programming) in javascript more and more.
+          
+      (c) Component code :
+            const RestaurantCard = (props) => {
+            const { resData } = props;   // you can also do : const resData = props.resData;
+            return (
+               <div
+                  className="res-card"
+                  style={{
+                  backgroundColor: "#F0F0F0",
+                  }}
+               >
+                  <img className="res-logo" src="https://b.zmtcdn.com/data/pictures/chains/1/50691/0435a03f4d2017a0a64d90b279c2fa63.jpg" alt="biryani-logo" />
+                  <h3>{resData.resName}</h3>
+                  <h4>{resData.cuisine}</h4>
+                  <h4>4.4 stars</h4>
+                  <h4>38 minutes</h4>
+               </div>
+            );
+            };
+
+         Note : This is an example of config driven UI.
+
+      => Why we need to pass keys while mapping the objects to each JSX component ?
+         when we are rendering components in a loop using map, React needs key for it's internal working. For example, 
+         there are 4 components already rendering and suppose there's one more component coming at the first place, it'll render only
+         this new component. How React identifies the components which are new or not rendered yet ? Using key :). Thats why, passing key
+         is really really important to optimize the code. And Key should be unique.
+
+      => Some people use indexes of map as key. React says NOT to use it. If the order changes, the indexes will change too.
+
+      => If there are no index ID in json data returned, request your backend team to send you :). 

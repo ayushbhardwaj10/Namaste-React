@@ -1,3 +1,39 @@
-#heading {
-  color: red;
+.header {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid black;
+}
+.logo {
+  width: 200px;
+}
+.nav-items > ul {
+  display: flex;
+}
+.nav-items > ul > li {
+  font-size: 24px;
+  padding: 10px;
+  margin: 10px;
+  list-style-type: none;
+}
+.res-card {
+  width: 200px;
+  height: 300px;
+  padding: 5px;
+  margin: 5px;
+}
+.res-card:hover {
+  border: 1px solid black;
+  cursor: pointer;
+}
+.Search {
+  padding: 10px;
+}
+.res-logo {
+  width: 190px;
+  height: 121px;
+  padding: 5px;
+}
+.res-container {
+  display: flex;
+  flex-wrap: wrap;
 }
