@@ -1,0 +1,147 @@
+/////// React Project Structure ////////
+
+1. Everything what we can do using React, Can be done using HTML, CSS and Javascript. So why do we use React ?
+   => It makes your developer experience easy. You can do a lot of work with less code. React makes your coding experience very good
+      and optimizes a lot of things to make robust large scale applications.
+
+2. In this Episode, we'll see the super powers of React.
+
+3. Lets clean our app. Till now we have put each component in one file only. But a good practice is to put each component in seperate JS file.
+
+4. Project Structure to be followed :    NOTE : You can follow any project structure but few structures are commonly followed in industry.
+    Read more in offical documentation : https://legacy.reactjs.org/docs/faq-structure.html
+    Few methods developers follow :
+    (a) structure by features of app
+    (b) structure by file type, example - components and applications
+   Currently, we'll use a simple structure and our app grows, we'll keep changing the structure as per need. 
+
+   - src folder : Put all the react main code in it.
+   - app.js file is the root file which is put directly in src folder.
+   - src/components : put all the components you created in this. Tip : Try to match the name of the component file with the component's name.
+     Some people, try to name their component name as <component_name>.js and some as <component_name>.jsx. A good way is to follow JS. Using .jsx
+     also doesn't change anything. Keep it simple and use JS.
+   - Once we put componenet to another file. Inorder to use this component in app.js, we need to export it from component file and import in
+     out App.js.
+   - we can import using - import Header from "./components/Header.js"; or import Header from "./components/Header";. ie even if I don't mention
+     Header.js and just put Header, React will automatically consider it as a javascript file. AKshaya doesn't put JS extension to keep it simple.
+   - Body.js requires resList which is a hardcoded data, we can put in Body.js too. But this is not a good way. Whenever we have any hard-coded data, 
+     we never keep it in our component file. Even the hardcoded URL's too. We keep it inside a seperate file called "utils" or "common" or "config".
+     Mostly used : "utils".
+   - In Utils folder we have a file "constains.js" where we put all hardcoded values. For name of constants we use Capital Letters and Snake case.
+     example : LOGO_URL
+
+   => Two ways to export : 
+      (a) Default Export
+      (b) Named Export
+      Default export" and "Named export" when we want to export multiple variables from a single file. 
+      Example of Named Export: export const LOGO_URL = "https://www.images/pizza.png"
+      To Import we use Curly Braces : import { LOGO_URL } from "../utils/constants";
+     
+      Note in default export,to export we just use "export default <variable_name> at the end of file and to import we don't use curly braces to
+      import. Example : import 
+        
+   => A variable can be both export and Named export.
+
+   => TIP : Keep each component line 100-200 lines maximum. If more, you can always break it down to smaller components and simply import :).
+      This keeps you code clean.
+
+5. Event handlers in react. Very easy, just like normal javascript : 
+      let filterTopRatedRestaurants = () => {
+      console.log("hi ");
+      };
+
+     <button className="filter-btn" onClick={filterTopRatedRestaurants}>
+          Top Rated Restaurants
+     </button>
+
+/////// React HOOKS /////////
+
+1. How to change UI as data changes ? Example : We are trying to filter and show on UI the restaurants whose avgRating > 4.
+   => If I change the recList on the click of this button, our UI will not change.
+   => React solves this problem. It's really good in DOM manipulations. It makes sure UI layer and data layer should be in sync with
+      each other. Super power of React : It does UI manipulations very efficiently and fast. We'll see what algorithms does that in react
+      in future.
+2. State Variables :
+   => How to keep your UI and data in react sync with each other. We use this using "State variables". It's a super powerful variable in react.
+   => For this, we use React Hook called "useState".
+
+3. What is Hook at the end of the day ? 
+   => They are normal Javascript Functions. 
+   => It's a pre-built Javascript function which is written by React Developers :). It's like a utility function.
+   =>  It's is present in the React libary which we already installed using npm install React.
+   => There are multiple Hooks : 
+      1. useState() : use to generate Superpowerful State Variables in React.
+      2. useEffects() 
+      Note : Most of the time, you'll use these two hooks. Learn this very well.
+
+4. useState() hook : Creates a State Variable 
+
+   => import { useState } from "react";  
+      // It's a named import from React library
+   => A local state Variable scope : inside that component
+   => How to create a state variable ?   
+
+      const [listOfRestaurants] = useState();    // we are not passing any values to out variable yet
+      - we call useState() function which returns a array, thats why we store it in a list []
+   => we create a normal JS variable like this :  const listOfRestaurants;
+   =>  How to pass a value to state Variable? 
+        - passing empty array value to listOfRestaurants :  const [listOfRestaurants] = useState([]);
+        - passing null value to listOfRestaurants :  const [listOfRestaurants] = useState(null);
+
+5. Updating State variable
+
+   =>  we modify it using a function, which is returned as the 2nd value by useState() hook. 
+   => name can be anything, but industry norm is using "set" + <useState Variable Name>. Example : setListOfRestaurants
+
+        const [listOfRestaurants,setListOfRestaurants] = useState(listOfRestaurantsJS);
+
+   =>  Wrong way to update a State Variable : listOfRestaurants = [] // we cannot update directly like this.
+   =>  We need to use the function setListOfRestaurant() and pass the updated value in it. Example : 
+       setListOfRestaurant(updatedList);
+   => As soon I update this state variable, it'll update my UI automatically. This process is called as "Render".
+   => Whenever a state variable is updated, React re-renders the component.
+   => This is the power of React and state variables :)
+   => If we had to do the same thing using Javscript, it's take us a lot of code to do it. React does that in few lines of code and 
+      very fast :). React makes this DOM operations of re-rendering very very fast. 
+
+6. How React does this Re-rendering very efficiently ? (Happens when state variable changes)
+   
+   (a) Reconciliation Algorithm : React uses "Reconciliation Algorithm" OR "React Fiber" ( It was launched in React 16)
+       
+      => We have the DOM Tree. Suppose there at 10 restaurants cards inside res-container. Suppose my UI changes from filtering to 3
+         filtered cards.
+      
+
+      => Initially, when you have a UI of 10 restaurants cards inside res-container, react creates a "Virtual DOM" of it. 
+
+      => Virtual DOM are not actual DOM. Virtual DOM is representation of actual DOM. Virtual DOM is nothing but normal Javsacript object of 
+         React.Element in your webb app. 
+         Example : React Elements of your component JSX returned. (Interally, it's a React.Element)
+         do console.log(<Body/>) and you'll see and object of React Element for Body component.
+
+     => This virtual dom is a nested objected. It's not an actual DOM but a representation of actual DOM.
+
+     => Diff Algorithm : As I click the button to update the DOM, It finds out the difference between the old virtual DOM and updated virtual DOM. 
+        It'll then update the actual DOM on every render cycle.
+      
+     => React keeps a track of entire DOM as virtual DOM ( a simple javascript object :) of React.Element). React doesn't touch actual DOM much,
+        it internally first checks the difference between old Virtual DOM and updated virtual DOM and only then finally updated actual DOM.
+
+     => This whole algorithm is known as "Reconciliation Algorithm" OR "React Fiber".
+      
+     => Thats why we use a seperate function to update the state variables. Because as soon as that function is called, Reconciliation Algorithm 
+        is applied and the UI is rendered efficiently using virtual DOMs.
+     
+    
+  
+
+
+   
+
+
+
+   
+   
+
+
+
