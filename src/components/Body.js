@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../../index.css";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -12,13 +13,11 @@ const Body = () => {
   }, []);
 
   let fetchData = async () => {
-    console.log("API called");
     let data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING");
     let jsonData = await data.json();
     setListOfRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []);
     setFilteredRestaurant(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []);
   };
-  console.log(listOfRestaurants);
   let filterTopRatedRestaurants = () => {
     let filteredTopRestaurants = listOfRestaurants.filter((res) => {
       return res.avgRating > 4;
@@ -26,7 +25,6 @@ const Body = () => {
     console.log(<Body />);
     filteredRestaurant(filteredTopRestaurants);
   };
-  console.log("body render...");
   return (
     <div className="body">
       <div className="filter">
@@ -58,7 +56,11 @@ const Body = () => {
       </div>
       <div className="res-container ">
         {filteredRestaurant.length > 0 ? ( // conditional rendering, intially out listofRestaurants data is empty
-          filteredRestaurant.map((restaurant) => <RestaurantCard key={restaurant?.info?.id} resData={restaurant} />) // passing Key is very important for optimization. Explained in notes :)
+          filteredRestaurant.map((restaurant) => (
+            <Link key={restaurant?.info?.id} to={"/restaurants/" + restaurant?.info?.id}>
+              <RestaurantCard resData={restaurant} />
+            </Link>
+          )) // passing Key is very important for optimization. Explained in notes :)
         ) : (
           <Shimmer />
         )}
