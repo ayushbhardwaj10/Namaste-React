@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   let [btnName, setbtnName] = useState("Login");
-  console.log("Header redered");
 
   return (
     <div className="header">
