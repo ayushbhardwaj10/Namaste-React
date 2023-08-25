@@ -102,7 +102,7 @@ Agenda of Episode : We'll study about class based components here.
       so that we can use this.props in our code. 
        
       Note : When we inherit a class a child class. In the child class constructor, we always
-      have to class the super() first before doing anything, else JS engine throws an error. 
+      have to call the super() first before doing anything, else JS engine throws an error. 
       It does that to protect us since, parent component classes show be initialized first before accessing
       child class. 
 
@@ -138,7 +138,7 @@ Agenda of Episode : We'll study about class based components here.
       the constructor of the class is called. 
 
       - Thus constructors are best place to recieve the props and create the state variables. So earlier, when hooks were introduced. We used to create
-      hook using this.state = {}. "state" is a reserved keyword.  It's simpley an JS object with set of values and initial value assigned to them.
+      state variables using this.state = {}. "state" is a reserved keyword.  It's simple an JS object with set of state variable names and initial value assigned to them.
 
       example : 
       constructor(props) {
@@ -231,13 +231,13 @@ Agenda of Episode : We'll study about class based components here.
           }}
         >  
 
-=> How this re-rendering works behind the scenes in class based components ? 
+=> How this re-rendering works behind the scenes in class based components ? (We'll learn this in detail going ahead in episode..)
 
    when we change the states using this.setState() passing an object of state variables to change, our whole component will re-render and It'll 
    compare this state object with the global state object defined in the constructor. It'll use reconciliation algorithm to find a diff of the 
-   state variables which are changed and React will only change those state variables and render them in the main DOM and keep other item of main DOM same.
+   state variables which are changed and React will only change those state variables and render them in the actual DOM and keep other item of actual DOM same.
 
-4. Lifecycle of React class base components ********** (Very Important for Interviews) **********
+4. Lifecycle of React class base components ********** (Very Very Important for Interviews) **********
 
 => We'll see how this class based component is mounted/loaded on the web page.
 
@@ -302,11 +302,9 @@ Agenda of Episode : We'll study about class based components here.
 => In short -> children's class compontent mounting happens before parent's mounting since child is within parent. Only if child finish, can the parent
    finish mounting.
 
-=> ************** THIS IS THE ENTIRE LIFECYCLE OF A REACT COMPONENT **********
-
 => Use of componentDidMount() ? Why React has given us this method ? - Make API calls :)
 
-   - There are certain things we do when the component is mounted successfully. 
+   - There are certain things we do after the component is mounted successfully (OR) render successfully. 
    - It's similar to useEffects() in functional components. It is used to make API calls. 
    ** IMPORTANT**** 
    - Why API calls are done in componentDidMount() ie. after component is rendered?  Just like useEffects(). We do this since if we do it before 
@@ -318,10 +316,10 @@ Agenda of Episode : We'll study about class based components here.
    Lets see how component lifecycle works when we have multiple child class based components inside a parent class based component. 
   
    Example :
-     <About/>
-       <UserClass/>
-       <UserClass/>
-      </About>
+     <About/>              // Parent class Component
+       <UserClass/>        // Child 1 class Component
+       <UserClass/>       // Child 2 class Component
+      </About>            
 
    Note : When we are calling the same component twice (like above for UserClass), we are creating 2 different instance of the same class.
    Example, we'll use same component class but we'll pass different props. 
@@ -349,7 +347,7 @@ Agenda of Episode : We'll study about class based components here.
    (6) Child2 Render()
    (7) Child1 componentDidMount()
    (8) Child2 componentDidMount()
-   (9) Parent componentDidMount()   // observe all the mounting is getting done at end.....
+   (9) Parent componentDidMount()   // observe all the mounting is getting done at end. (Explained below..)
 
 =>  *** (Important) ****
    Reason for this :  
@@ -377,9 +375,12 @@ Agenda of Episode : We'll study about class based components here.
    (6) Child2 Render()
 
    Batched commit phase of children : 
+
+   // Actual DOM updates here for child 1 and child 2
    (7) Child1 componentDidMount()
    (8) Child2 componentDidMount()
 
+   // Actual DOM updates here for parent
    (9) Parent componentDidMount()   
 
 => ****IMPORTANT**** Why this optimization is done by batching Render phase and Commit phase : 
