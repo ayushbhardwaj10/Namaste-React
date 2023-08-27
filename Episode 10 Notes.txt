@@ -1,0 +1,122 @@
+Agenda of Episode :  We'll see how to make our app more beautiful. We'll see how we can add styles to our applications, how we can add CSS to our
+application and then we'll pick a CSS framwework to add style to our whole app 
+- We'll learn Tailwind CSS.
+////////////////
+
+=> Till now the focus was to make features inside React, but now we'll see how to our app look very beautiful.
+
+
+Ways to writing CSS : 
+
+1. Single css file for every component
+
+   => Currently we're using a single index.css where we had put CSS of each and every components. Thats a very naive way 
+      to write CSS for components.
+
+2. Use Sass and Scss
+   (a) Sass
+   => Sass : It's like Writing CSS with some superpowers :)
+
+   These are not recommended ways to write CSS since as our app grows, Sass and Scss doesn't grow well. These are not used in industry production
+   ready apps. 
+
+   => Companies do not use Sass and CSS of all components in a single file.
+
+ 
+Whats a recommended ways what developers use ? 
+///////////////
+
+3. Styled Components
+
+   => It's used in industry. A lot of big companies used "styled components".
+
+4. Bootstrap, MaterialUI - They give pre-built components
+
+We'll learn Tailwind CSS - It's latest in Front-end community and gaining a lot of popularity.
+///////////////
+
+5. Tailwind CSS.
+
+=> It's used to style your component without leaving(switching tab) your HTML. (or JSX)
+
+=> It's a generic library with works with all the front-end frameworks and libraries like React, Angular etc.
+
+=> Lets install it. It's  not installed in a normal way.
+ 
+=> On Tailwind CSS website -> Get Started -> Framework guides -> "Parcel". Note: If we use CLI create react app, we'll use "Create React App".
+
+=> Follow the steps to add Tailwind CSS to your project : https://tailwindcss.com/docs/guides/parcel
+   
+   npm install -D tailwindcss postcss
+   npx tailwindcss init
+
+   - It Install two packages for use tailwindcss and postcss. 
+   - We install postcss since tailwindcss uses postcss behind the scenes to transform CSS with javascript. 
+   - We don't have to learn postcss, tailwindcss uses it in background.
+   - npx tailwindcss init : It executes the tailwindcss package and init command with it creates a tailwind.config.js.
+   - Parcel uses postcssrc file (mentioned in steps) to understand Tailwind. 
+   - (mentioned in steps) 
+      content: [
+         "./src/**/*.{html,js,ts,jsx,tsx}",
+      ],
+      It means we can use Tailwindcss in any of these files - html, js, ts, jsx, and tsx.
+   
+   -  (Explained in steps) - We'll delete all the lines css that we have written till now and just write below three lines. 
+
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities; 
+
+      It's a way we import tailwind CSS in our app.
+
+   - We'll not be touching index.css ever again in my project XD.
+   - These three lines are only 3 lines we need to write in index.css.
+
+   - Our app is now configured to use Tailwind CSS :)
+
+=> Now our old CSS is gone and toldwind CSS is confugured in our app. We'll now use tailwind to customize the styling in our app. 
+
+=> Tailwind CSS way to add styles :  It gives you  class names for every kind of CSS that you want to add.
+   Out thought process will work exactly the same way, we did while using normal CSS files.
+
+=> Lets write CSS for out header component for flex 
+
+=> Initially, it takes some time to learn these classes, but once you start using it, you life will become more and more easy.
+
+6. See  Tailwind vs code extension. It's an awesome VS code Extension which gives you suggestions for all the tailwind classes and if you 
+   hover over a class, it tells you what the tailwind CSS is doing behind the scenes in plain css.
+
+=> What if there's not class for width 200px. You can use dynamic tailwind using this : 
+  
+   <div className="w-[200px]"> 
+     .....
+   </div>
+
+7. Disadvantage of Tailwind CSS
+   => Sometimes the number of classes that we add become a lot and our code starts looking ugly with soo many tailwind classes.
+   => Other than this, Tailwind is amazing. It makes your life very very easy and it promotes faster development.
+
+
+8. Tailwind CSS continue....
+
+(Important) ****** 
+
+=> Major Advantage of Tailwind : 
+  - Tailwin css is very light weight. Suppose in our code, we use specific classes. When parcel makes a bundle of css. It only import the CSS
+   that are absolutely required for our app. If we have multiple "m-4" classes in our app. It'll import m-4 only 1 and use it multiple times.
+
+  - Tailwind automatically removes all unused CSS when building for production. Mostly people use a lot of redudant classes. Tailwind CSS makes sure,
+    there's not redudant and unused classes in your bundle for dev and prod enviornments.
+
+  - Build whatever complex UI you can build. You are restricted to anything. You have a class for everything. Eg : You have classes for hover as well.
+
+  - You can also build responsive applications.
+
+  - Very easy to build dark mode. Today, everyone is shifting to dark mode. Usually, it's very very difficult to build dark mode from scratch.
+
+
+
+
+
+
+
