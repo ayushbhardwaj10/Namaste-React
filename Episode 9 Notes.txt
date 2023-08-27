@@ -1,0 +1,250 @@
+Agenda of Episode :  we'll learn how to write code in a better way and how we can make our app optimized, very fast, light weighted so that it loads
+very fast.
+/////////////////
+
+=> If we run our app, it runs perfectly, but is out code clean ? Is it written in a better way?  Yes, we'll learn that.
+
+=> While learning this we'll learn a new concept "Custom Hooks".
+
+////////// writing Clean code ///////////////
+
+1. "Single responsibility principle" - Introducing Custom Hooks.
+
+=> Before we learn Hooks, lets learn about a important concept in computer science, "Single responsibility principle". It says thats suppose we
+   have a class or a function. It should have a single responsibility. Suppose we have component "RestaurantCard", it should only display the
+   restaurant card on web page. Thats a single responsibility. 
+
+=> Similary for each component, we should try to give only 1 responsibility. If we are doining multiple things in a single component, we should
+   try to break it down into multiple components. 
+
+=> Doing this and writing our code in modular fasion : 
+   (a) makes your code more maintainable and testable. I can write testcases just for the single function or class. If any bug comes later,
+   it can easily be tracked down to which small module it belongs.  
+   (b) Helps us re-use these modules. 
+
+=> Single responsibility principle doesn't have any hard and fast principle. Your code should just be clean.
+
+=> So, we'll take component, that can be optimized a little more to have a single responsibility and a new concept of "Custom Hooks" will be
+   introduced. We'll create our own custom hooks. 
+
+=> We'll learn how we can create our own custom hooks and how we can use this Custom Hooks to make our code more module. It'll extract extra 
+   responsibilities from a component and make we'll make a hook for that. Remember hooks are nothing but utility functions.
+
+2. Custom Hooks 
+=> We'll use RestaurantMenu component to make it's code clean and more modular using Custom hooks. 
+
+=> Why do we choose custom hook ? It's not mandatory to use. But it makes our code more modular and reusable. 
+
+=> In the component RestaurantMenu, the component has two responsibilities : 
+    (1) Fetching the Data from API 
+    (2) displaying the data on UI (using render()).
+
+=> RestaurantMenu component should be worried only for displaying the data on UI, but not fetching the data, how it is fetching, from where data is coming etc.
+  
+=>  What if we had a hook "useRestaurantMenu()" which gives us the restaurant information ( resInfo) and we don't have to worry about how this custom hook
+    is fetching the data. 
+
+    something like this : const resInfo = useRestaurantMenu()
+
+    This will make the RestaurantMenu component not worry about fetching the data and manage it's own state. Out custom hook will handle that.
+    Only responsibility it'll have will be to load the UI on the screen.
+    
+   Lets create our own custom hook.  
+
+=> Hooks are just utility/helper functions. Recommended conventions for custom hooks : 
+   (a) Thus we'll create out custom hooks in the "utils/" folder.
+   (b) Prefer creating a seperate file for a seperate hook.
+   (c) We'll name filename as the same name as the hook name. Whenever you create hook, start with small case "use" then name of hook. We do this
+       for the React to find if it's starting from "use" it's a hook. 
+
+=> we'll create useRestaurantMenu() hook in utils/. It'll take a resId as input and it's job will be to return restaurant information.
+
+=> We'll call the API in useRestaurantMenu() exactly in the same way we did in out component. ie. in useEffect hook. Since React is tracking this hook.
+   Also, just like we had state variables in our components. We can use useState to create state variables in our custom hooks as well. 
+
+   useRestaurantMenu() hook : 
+
+   import { useEffect, useState } from "React";
+   import { MENU_API } from "../utils/constants";
+
+   const useRestaurantMenu = (resId) => {
+   const [resInfo, setResInfo] = useState(null);
+   useEffect(() => {
+      fetchData();
+   }, []);
+
+   const fetchData = async () => {
+      const data = await fetch(MENU_API + resID);
+      const json = await data.json();
+      setResInfo(json);
+   };
+   return resInfo;
+   };
+
+   export default useRestaurantMenu;
+
+=> Explanation of how it works : 
+
+   Initially it'll return null which is the initial value of resInfo. But after our component render for the first time, it'll execute useEffect(), even though
+   useEffect is in a custom hook, since we are calling this hook in out component, it'll get binded to our component and after our component UI renders,
+   it'll execute the useEffect() in our custom hook. It'll then fetch the data which will update the stateVariable in custom hooks and our custom hook will re-render and 
+   this time, useEffects not be called in out custom hook since we gave depencency list as [] so useEffect will only be called initially. It'll thus return the updated
+   resInfo. We just migrated the same logic we wrote in RestaurantMenu.js logic in our custom component useRestaurantMenu().
+
+=> Now our code has become more modular, suppose there's a bug in our menu fetching component, I can easily just test my custom hook. Earlier we had to
+   test the whole component since the fetch data and UI rendering logic was in same component. 
+
+3. We'll create one more feature of custom hooks, that will strengthen your concepts about custom hook. 
+   
+   => We'll create a feature that will tell whether user's internet is connected or not ie. whether user is online or offline. It tells, whether
+      user is online or offline.
+   
+   => Use : If internet of the user is not working, none of the APIs will work and we'll tell the user, that you are offline. ie. Our App will still
+      work when internet is not there. 
+
+   => Lets create a custom hook, Thinks to decide before creating a hook : 
+
+      (a) Decide the contact: What will the input and output for our custom hook. (Remember, a hook is just a normal javascript function)
+
+   => For this custom hook, input will be nothing bt we'll output will the onlineStatus in boolean. Hook name : useOnlineStatus.js
+
+      import { useEffect, useState } from "react";
+
+         const useOnlineStatus = () => {
+         // check if online
+         const [onlineStatus, setOnlineStatus] = useState(true);
+         useEffect(() => {
+            window.addEventListener("offline", () => {
+               setOnlineStatus(false);
+            });
+            window.addEventListener("online", function () {
+               setOnlineStatus(true);
+            });
+         }, []);
+
+         // return boolean value;
+         return onlineStatus;
+         };
+
+         export default useOnlineStatus;
+
+  => To check if the user is online or offline we are using a window's event listener which once registered, keeps listening if the system is
+     online or offline. We only need to add the listener once. Thats why, we do it in useEffect() hook passing [] as empty dependency array. 
+
+  => We'll use a state variable "onlineStatus" which we'll update everytime the offline and online status changes. Since we are calling this hook
+     in out component. The hook's state variables and useEffects are binded to out components. As soon as the component renders, useEffect() of the 
+     hook is called. And as soon as the state variable of custom hook is updated, out component will re-render again. 
+
+  => Now if a user goes offline, a new message on Body.js is displayed (instead of showing cards) that you are offline, and once user becomes online,
+     new data is displayed.
+
+      Putting below code in Body.js before returning the actual JSX : 
+
+      const onlineStatus = useOnlineStatus();
+      if (onlineStatus === false) return <h1>Look like you are offline, please check your internet connection</h1>;
+
+     
+
+/////           Writing Optimized apps - Break your apps into smaller pieces                         /////////
+/////          Called - "Chunking/Code Splitting/Dynamic Bundeling/Lazy Loading/on demand Loading"  //////////
+
+=> Bydefault, When we test our apps on development mode, our parcel bundles our app into a single javascript file. index.js. you can see that in /dist folder.
+   Now this file is huge(few mbs) since all the components all the JS code is in this file. Production index.js will be much smaller than development one.
+   When we build a huge application like Makemytrip.com we need to optimize our app to make this index.js file as small as possible.
+
+=> Our app will become slow and our home page will take a lot of time to load if it is huge. 
+
+=> Solution : When building larger apps -> We'll bundle our app in smaller pieces. So we'll not just have only single index.js bundled file
+   but multiple small bundled javascript files.
+
+1. How to make these smaller bundles and what should be there in these smaller bundles ? - Important for front-end system design interview **
+
+  => We want a logical seperation of our bundles. That means a bundle should have a enough code for a major feature in our website.
+
+  => Once we do it, we have multiple JS files to render on our UI. So each JS file is small and loads quickly rather waiting for a single JS
+     file which will take a lot of time to load everything. 
+ 
+  => How can we do in our app ?  Generally we don't need chunking in our app, since it's very small, but lets assume we are doing it for a larger
+     scale application. 
+
+  => Assuming a case we'd need it : Suppose app also have had a grocery delivery along with food deliver. We'll have tabs to switch between them. 
+     And the grocery delivery also has a lot of it's components just like we have to food deliver app. 
+
+  => So we'll make different bundle for food delivery and grocery delivery. Lets make few sample components for grocery delivery.
+
+  => We create a smaple component Grocery.js and assume it has a lot of child components of it's own just like we have for our food delivery components.
+
+  => Lets create a route also for this Grocery component in our Routing configuration in App.js.
+
+  => No asumming Grocery.js is huge and has a lot of child components, when parcel bundles it for dev and prod environment, it still put both grocery
+     and food delivery code in one single index.js only. 
+
+  => Now lets logically break our code into two different bundles so that both my grocery and all of components of grocery should come from a 
+     different bundle and food ordering components from different bundles.
+
+  => So we'll do lazy loading/ on-demand loading. We'll only load the bundle of grocery once the user click to navigate to grocery component. 
+     To do this, wherever, we are importing Grocery Component, we'll not load it normally using : import Grocery from "./components/Grocery.js";
+   
+     // Named importing the lazy module form "react" library
+     import React, {lazy} from "react"; 
+
+    - We'll lazy load it : 
+      const Grocery = lazy(()=>import("./components/Grocery.js"));  // you can put this line below other import statement values
+   
+   - lazy function takes a callback function and the "import" use here is different from normal import keywords we use above in Javascript.
+
+   => Don't understimate this one line of code above. It's very very powerful behind the scenes and can do magical things.
+
+   => This will create a separate bundle with name "Grocery.js". So 2 parcel creates two bundles now : 
+      (1) index.js - bundles all food delivery components 
+      (2) Grocery.js - bundles all grocery components.
+
+   => BUT ERROR COMES: when we click on Grocery tab to go to Grocery component an ERROR COMES on console : 
+      React Router caught the following render Eror :A comonent suspended while responsing to synchronous input.
+
+      - Initially we have only index.js bundle and not grocery.js bundle loaded. Now I'm when click on grocery tab, then only my grocery code will
+        be loaded. Now React thew an eror
+      - This happens because, if you see your network tab in developer console, you'll see it takes 38 ms to load the Grocery.js bundle to load,
+        but since react is very fast, the router tries to load <Grocery/> component but doesn't find it due to 38 ms delay. Thus React,
+        suspended the rendering. 
+      - How to handle this error ? we'll use "Suspence" which is a component and comes from React. We'll just wrap out component in <Suspence> component and
+        we'll give a placeholder, ie. a fallback what should react load till our component is rendering during delay of 38ms:
+
+        import React, { lazy, Suspense } from "react";
+          
+         <Suspense fallback={<div>Loading...</div>}>
+            <Grocery />
+          </Suspense>
+
+         Note in flallback, we'll pass any JSX or a component like some <Shimmer/> UI to load till our component code loads on the browser.
+
+      - On a slower internet, it takes more time to load the new component on browser. You can change in network to "slow 3G" to test this "loading..." fallback JSX we gave.
+
+2. How Lazy loading works beind the scenes : 
+
+  => Does lazy loading fetch the chunks from the server? Yes, the first time a chunk is needed, it's fetched from the server.
+
+  => After the initial fetch from the server, the chunk is usually cached and served locally for subsequent requests.
+       
+
+
+        
+      
+
+   
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

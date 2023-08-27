@@ -70,3 +70,9 @@
   width: 150px;
   height: 150px;
 }
+.onlineText {
+  color: #3cb043;
+}
+.offlineText {
+  color: red;
+}

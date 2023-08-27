@@ -2,21 +2,24 @@ import { useState, useEffect } from "react";
 import "../../index.css";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
+import useOnlineStatus from "../utils/useOnlineStatus";
 import { Link } from "react-router-dom";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
+
   useEffect(() => {
+    console.log("body.js useEffect() called");
     fetchData();
   }, []);
 
   let fetchData = async () => {
     let data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING");
     let jsonData = await data.json();
-    setListOfRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []);
-    setFilteredRestaurant(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []);
+    setListOfRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []); // keep chaging it's index to 4 to 5 or check where data is coming. it keeps changing
+    setFilteredRestaurant(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []); // keep chaging it's index 4 to 5 or check where data is coming. it keeps changing
   };
   let filterTopRatedRestaurants = () => {
     let filteredTopRestaurants = listOfRestaurants.filter((res) => {
@@ -25,6 +28,10 @@ const Body = () => {
     console.log(<Body />);
     filteredRestaurant(filteredTopRestaurants);
   };
+
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false) return <h1>Look like you are offline, please check your internet connection</h1>;
+
   return (
     <div className="body">
       <div className="filter">
