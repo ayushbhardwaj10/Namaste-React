@@ -1,25 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "../../index.css";
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import { Link } from "react-router-dom";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
 
+  const { updateUserName } = useContext(UserContext);
+  updateUserName("Rahul");
+
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
   useEffect(() => {
-    console.log("body.js useEffect() called");
     fetchData();
   }, []);
 
   let fetchData = async () => {
     let data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING");
     let jsonData = await data.json();
-    setListOfRestaurants(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []); // keep chaging it's index to 4 to 5 or check where data is coming. it keeps changing
-    setFilteredRestaurant(jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants || []); // keep chaging it's index 4 to 5 or check where data is coming. it keeps changing
+    setListOfRestaurants(
+      jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants ||
+        jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    ); // keep chaging it's index to 4 to 5 or check where data is coming. it keeps changing. If [5] is null, it'll take from [4]
+    setFilteredRestaurant(
+      jsonData?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants ||
+        jsonData?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    ); // keep chaging it's index 4 to 5 or check where data is coming. it keeps changing. If [5] is null, it'll take from [4]
   };
   let filterTopRatedRestaurants = () => {
     let filteredTopRestaurants = listOfRestaurants.filter((res) => {
@@ -64,17 +74,17 @@ const Body = () => {
           </button>
         </div>
       </div>
-      <div className="res-container flex flex-wrap justify-center">
+      <div className="res-container flex flex-wrap content-start">
         {filteredRestaurant.length > 0 ? ( // conditional rendering, intially out listofRestaurants data is empty
           filteredRestaurant.map((restaurant) => (
             <Link key={restaurant?.info?.id} to={"/restaurants/" + restaurant?.info?.id}>
-              <RestaurantCard resData={restaurant} />
+              {/* If the Restaurant is promoted, then add promoted label on it.*/}
+              {restaurant?.info?.promoted ? <RestaurantCardPromoted resData={restaurant} /> : <RestaurantCard resData={restaurant} />}
             </Link>
-          )) // passing Key is very important for optimization. Explained in notes :)
+          ))
         ) : (
           <Shimmer />
         )}
-        {/* round brackets used, since we want to return JSX for each object in resList. */}
       </div>
     </div>
   );

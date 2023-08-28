@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./components/Header.js";
 import Body from "./components/Body.js";
@@ -8,18 +8,34 @@ import About from "./components/About.js";
 import Contact from "./components/Contact";
 import Error from "./components/Error";
 import RestaurantMenu from "./components/RestaurantMenu.js";
+import UserContext from "./utils/UserContext.js";
 const Grocery = lazy(() => import("./components/Grocery.js"));
-
-s1 = "hi";
-s2 = "ayush";
 
 // Parent Component where all the components are rendered
 const AppLayout = () => {
+  const [userName, setUserName] = useState();
+
+  // sample authitencation code
+  useEffect(() => {
+    // some response from Authentical API returns the name of the user.
+    const responseName = "Ayush";
+    setUserName(responseName);
+  }, []);
+
   return (
-    <div className="app">
-      <Header />
-      <Outlet />
-    </div>
+    <UserContext.Provider
+      value={{
+        loggedInUser: userName,
+        updateUserName: (name) => {
+          setUserName(name);
+        },
+      }}
+    >
+      <div className="app">
+        <Header />
+        <Outlet />
+      </div>
+    </UserContext.Provider>
   );
 };
 const appRouter = createBrowserRouter([
