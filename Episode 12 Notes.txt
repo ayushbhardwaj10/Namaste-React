@@ -1,0 +1,279 @@
+Agenda of Episode :  We'll study Redux in this episode :)
+- We're going to see how we'll build our own redux store.
+- We'll see how we can manage data layer of our app
+- Redux works in the data layer of our app. Remember in an app we have 2 layers : UI layer and data layer.
+
+1. A general introduction about Redux
+
+=> Note : React is not mandatory. Many companies start using redux from day 1 not realizing if it's actually required.
+
+=> Redux is not a necessity in small size or mid size application. 
+
+=> Where Redux should be preferred ?
+   For a large size app where the data layer is huge and there are a lot of read and write operations happening 
+   in your react app and there are a lot of components and there's a lot of data transer between these components.
+
+=> All the apps that are built using Redux, can be built without using Redux, thus Redux is not mandatory. Thus use it
+   only when it's required. Use Redux wisely :)
+
+=> Redux is not a part of the React. It's an external library which we install and add it to our app
+   ( whereas, React contexts are part of react)
+
+=> Note : Redux is not the only library used to manage state, another libraries used to manage state are : 
+   (a) zustand
+
+=> When we use Redux then ? 
+
+   - It's great for large scale application : handling data, managing your store and lot more advantages what we'll
+   see ahead.
+
+   - Our application becomes easy to degug. There's a redux dev tools which helps us debug our apps. We'll learn all this.
+
+=> Redux is a state management library which can be used with apps other than React as well. People associate it with 
+   React since people heavily use it with react.
+ 
+
+2. Redux offers two library :  
+
+   (a) Redux Toolkit : Used to create redux store.
+      -> It's the newer way to build redux. Redux toolkit is the standard way of writing redux not. Older
+       way is called venila redux. But we'll not be using venila redux. We'll use latest redux toolkit.
+
+   (b) React-Redux : It's used to provide the store we created to our react app.
+
+   
+
+   => We'll learn to use current standard way - using Redux-toolkit along with react-redux.
+
+3. Redux toolkit -> Famously called as "RTK". Remember it. XD
+
+=> From official docs : 
+
+   The Redux Toolkit package is intended to be the standard way to write Redux logic. It was originally created to help address three common concerns about Redux:
+
+   "Configuring a Redux store is too complicated"
+   "I have to add a lot of packages to get Redux to do anything useful"
+   "Redux requires too much boilerplate code"
+
+=> Redux initially has a huge learning curve. You have to learn a lot of things to start using redux. Earlier with venilla
+   redux, it was even more complicated. But with redux toolkit, it's easier than before but still little complicated LOL. 
+
+=> Lets learn the architecture and theory of of React toolkit. Once we learn theory of it, writing code is super easy.
+ 
+=>  We'll draw a lot of diagrams. I'll draw and number it for reference in ipad notes "javascript 2"
+
+=> Let's see what feature we are buiding in our app : 
+   - Lets build a cart flow in our food ordering app. 
+   - For each cuising in a restaurant, we have a "Add +" button on top of it. Once we click on it, it should
+     go to the "cart" on the top of it. 
+   - We'll also create a cart page.
+   - Check the Swiggy app to understand the functionality.
+   - So, we can add any item to cart. On header it'll show "cart-2" depecting 2 total items in cart.
+   - and if I click on it, I see a cart page to see what all items we have in our cart. 
+   - For this feature, to store all our cart information, we'll use redux store.
+
+=> Lets understand the architure of Redux ( React toolkit here )
+   Concepts : 
+   (a) Redux store
+   (b) slices
+   (c) dispatch and action
+   (d) Reducer function
+   (e) Selector
+   (f) subscribing to the store.
+
+  - See Diagram-1 : A basic feature what we want to do.
+  - What is a Redux store ? Redux store is simply a big whole object :) and it's kept in a central global place.
+  - It's a global place where any component and read and write data. It's big object. And most of the major data of
+    our app is kept here. 
+
+  - Now, it is a good practice to keep the whole data inside one big object ? Yes, It's absolutely fine. 
+    To avoid the problem that redux store become very huge, we have the concept of "Slices" in redux store.
+
+  - What are these slices actually ? 
+    Slices could be used to make logical partitions in our redux store object. Example in our food ordering app,
+    A seperate slice can be used for cart data like a cart slice, another slice for logged in user called user slice.
+
+  - Initally a slice can be a empty array and as we put data in it, it can get modified. 
+
+  => Writing to the slice
+     ..........
+
+  - Once I click on the add button, how will the data go to the Cart slice. ? It's not simple. Redux says
+    We cannot directly add data to cart slice. There's a way to do it , Redux says : 
+   
+    I need to "dispatch" an "action"
+
+  - when we click on add button, it "dispatches" an "action" which calls a function. This function modifies the cart slice.
+    This function is known as "Reducer"
+
+  - Thus, when I click on the add button, it dispatches an action and that action calls a reducer function which modifies 
+    our cart slice. 
+
+  - Why we doing soo many things ? doesn't it makes thigns complicated ? No, It'll make our life easy. We'll see how when we code.
+
+  => Reading from slice
+     ...........
+
+  - Supoose, we have our data in cart, how do we read it in header and show the count of items in cart ?
+  - Sppose I add an item to cart slice, it should change the count to 1, and if I add another item to cart, it should
+    increment the count.
+   
+  - For reading, we'll use something known as "Selector". Selector will read the data from the store (cart slice) and will
+    modify the data in our react component.(Cart count in header) Selector will give data to cart in header.
+   
+  - This phenomena is called as "Subscribing to the store". We say the header component is subscribed to our store. :)
+    It simple means the header component is in sync with the store. If my store changes, the header component will update
+    automatically. Redux will automatically update the header component when our store changes. Header component as
+    subscribed to the store. And how do we subscribe to store ? Using "Selector". 
+
+4. Lets code everything we learnt in theory and create this feature.
+  
+   Steps : 
+     (1) Install 2 libraries for redux : 
+         (a) redux-toolkit (npm i @reduxjs/toolkit)  Note : "@" is just a part of the name. The team might have find it cool lol. It's not something else in syntax. 
+         (b) react-redux (npm i react-redux)
+
+     (2) Build our store
+     (3) Provide this store to our app (Make a bridge)
+     (4) Create a cart slice to add items to slice.
+     (5) Disptach(action)
+     (6) Selector
+
+   (1) Install 2 libraries for redux  :
+        npm i @reduxjs/toolkit
+        npm i react-redux
+
+       Note : In venilla redux, a lot of different dependecy libraries were required to make redux powerful. 
+       Now only these 2 are enough.
+       
+   (2) Build our store 
+
+       => We'll build out store in utils/ called "appStore.js"
+
+           import { configureStore } from "@reduxjs/toolkit";
+           const appStore = configureStore();
+           export default appStore;
+
+         - Currently we haven't added any slice in our store. We'll add it later. Lets connect the store to our app now.
+
+   (3) Provide this store to our app
+
+      =>We'll need to provide our store in the root of our project which is App.js.
+
+        import { Provider } from "react-redux";
+
+      => Note "@reduxjs/toolkit" is used to create the redux store. But to provide this store our react application,
+      for that "react-redux" library's "Provider" is used. Provider is a component created by redux library devs
+
+      => To provide the store to our app, wrap our entire app inside  <Provider></Provider> and provide props store
+         as our store we created using configureStore.
+
+         Example : 
+
+         <Provider store={appStore}>
+            <UserContext.Provider
+            value={{
+               loggedInUser: userName,
+               updateUserName: (name) => {
+                  setUserName(name);
+               },
+            }}
+            >
+            <div className="app">
+               <Header />
+               <Outlet />
+            </div>
+            </UserContext.Provider>
+         </Provider>
+
+      => Suppose, you don't want to use store in entire app but a portion of it, then wrap that part of the app
+         inside <Provider store={some-store}>
+                   ..
+                </Provider>
+
+      => Now store is added to our react app.
+
+   (4) Create a cart slice to add items to slice.
+
+       => you can create another file cartSlice.js in util/ for your slice
+
+       => Initial code : 
+
+         import { createSlice } from "@reduxjs/toolkit";
+         const cartSlice = createSlice({
+            name: "cart",
+            initialState: {
+               items: [],
+            },
+            reducers:{
+               addItem : (state,action)=>{
+                     
+               }
+            }
+         });
+
+        => In this, we create a slice using createSlice function. In that we pass an object with 3 imporant keys,
+
+          (a) name : name of the slice you want to give.
+          (b) initialState : an object of initial state, current items are empty array.
+          (c) reducers : an object of reducer function, key is reducer name and value is reducer function which are associated to an action. 
+             - This reducer function has 2 parameters 
+               a) state : gives access to the 'initialState' we defined above.
+               b) action :  action parameter is used to update the state of our slice 
+
+        => definiing reducers
+        =>  const cartSlice = createSlice({
+               name: "cart",
+               initialState: {
+                  items: [],
+               },
+               reducers: {
+                  addItem: (state, action) => {
+                     state.items.push(action.payload);
+                  },
+               },
+            });
+       => we'll add this payload to out action when we dispatch the action in future. we'll see this.
+
+       => adding more reducers to cart slice : 
+
+          reducers: {
+            addItem: (state, action) => {
+               state.items.push(action.payload);
+            },
+            removeItem: (state, action) => {
+               state.items.pop();
+            },
+             clearCart: (state) => {   // we don't need action here.
+               state.items.length = 0;
+            },
+         },
+
+
+
+///////// Will conitnue studing it  ////////
+read official docs for understanding how it works as a whole for veeva interview : https://redux-toolkit.js.org/tutorials/quick-start
+
+
+
+  
+
+   
+
+
+
+  
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
